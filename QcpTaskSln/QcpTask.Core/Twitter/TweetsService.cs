@@ -39,7 +39,7 @@ namespace QcpTask.Core.Twitter
 
             var rules = new List<StreamingAddRule>
             {
-                new StreamingAddRule { Tag = "has BTCtoUSD string", Value = "BTCtoUSD" },
+                new StreamingAddRule { Tag = "has BTCtoUSD string", Value = "QCP" },
             };
 
             Streaming? result = await twitterCtx.AddStreamingFilterRulesAsync(rules);
@@ -139,7 +139,7 @@ namespace QcpTask.Core.Twitter
 
                 chatHub.Clients.All.SendAsync("broadcastMessage",
                 "twitterTweet",
-                tweet.Text + fullJson);
+                $", Tweet Text: {tweet.Text} CreatedAt: {tweet.CreatedAt}, Tweet ID: {tweet.ID}");
             }
 
             return await Task.FromResult(0);
