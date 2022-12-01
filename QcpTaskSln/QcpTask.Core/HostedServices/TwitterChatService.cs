@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using LinqToTwitter;
+using LinqToTwitter.OAuth;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using QcpTask.Core.Hubs;
+using QcpTask.Core.Twitter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +17,32 @@ namespace QcpTask.Core.HostedServices
     public class TwitterChatService : IHostedService
     {
         private readonly IHubContext<ChatHub> chatHub;
+        private readonly IConfiguration configuration;
         private Timer timer;
-        public TwitterChatService(IHubContext<ChatHub> chatHub)
+        private readonly TwitterContext twitterContext;
+
+        public TwitterChatService(IHubContext<ChatHub> chatHub, IConfiguration configuration)
         {
             this.chatHub = chatHub;
+            this.configuration = configuration;
+
+
+            var auth = new ApplicationOnlyAuthorizer()
+            {
+                CredentialStore = new InMemoryCredentialStore
+                {
+                    ConsumerKey = configuration.GetValue<string>("twitterConsumerKey"),  //Environment.GetEnvironmentVariable(OAuthKeys.TwitterConsumerKey),
+                    ConsumerSecret = configuration.GetValue<string>("twitterConsumerSecret") //Environment.GetEnvironmentVariable(OAuthKeys.TwitterConsumerSecret)
+                },
+            };
+           auth.AuthorizeAsync().GetAwaiter().GetResult();
+
+            twitterContext = new TwitterContext(auth);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            timer = new Timer(DoWork, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(10));
+            timer = new Timer(DoWork, null, TimeSpan.FromSeconds(10), Timeout.InfiniteTimeSpan);
 
             return Task.CompletedTask;
         }
@@ -34,8 +55,12 @@ namespace QcpTask.Core.HostedServices
         private void DoWork(object state)
         {
             chatHub.Clients.All.SendAsync("broadcastMessage",
-                $"MachineName: {Environment.MachineName}, CurrentManagedThreadId: {Environment.CurrentManagedThreadId}",
+                $"Started! MachineName: {Environment.MachineName}, CurrentManagedThreadId: {Environment.CurrentManagedThreadId}",
                 $"{DateTime.Now.ToString()}");
+
+            TweetsService.DoSampleStreamAsync(twitterContext, chatHub).GetAwaiter().GetResult();
+
+
         }
     }
 }
