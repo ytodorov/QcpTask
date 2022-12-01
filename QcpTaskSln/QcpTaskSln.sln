@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QcpTask.Web", "QcpTask.Web\QcpTask.Web.csproj", "{4ECEAC66-1202-48FA-967F-17E91D2BF3A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QcpTask.Core", "QcpTask.Core\QcpTask.Core.csproj", "{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4ECEAC66-1202-48FA-967F-17E91D2BF3A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ECEAC66-1202-48FA-967F-17E91D2BF3A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ECEAC66-1202-48FA-967F-17E91D2BF3A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
