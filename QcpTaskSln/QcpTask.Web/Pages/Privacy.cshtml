@@ -1,4 +1,6 @@
 ﻿@page
+@using Newtonsoft.Json;
+@using QcpTask.Core.Caching;
 @model PrivacyModel
 @{
     ViewData["Title"] = "Privacy Policy";
@@ -6,3 +8,12 @@
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
+
+@{
+    var _public_api = new CCXT.NET.Binance.Public.PublicApi();
+    var res = _public_api.FetchTickerAsync("BTC", "USDT").Result;
+}
+
+@JsonConvert.SerializeObject(res, Formatting.Indented);
+
+@SimpleCache.BinanceKlineDatas.FirstOrDefault()?.Kline?.High

@@ -4,6 +4,7 @@ using BinanceExchange.API.Enums;
 using BinanceExchange.API.Models.Request;
 using BinanceExchange.API.Models.WebSocket;
 using BinanceExchange.API.Websockets;
+using CCXT.NET.Shared.Coin.Public;
 using LinqToTwitter;
 using LinqToTwitter.OAuth;
 using log4net;
@@ -77,23 +78,49 @@ namespace QcpTask.Core.HostedServices
             try
             {
                 chatHub.Clients.All.SendAsync("broadcastMessage",
-                    $"Started! MachineName: {Environment.MachineName}, CurrentManagedThreadId: {Environment.CurrentManagedThreadId}",
-                    $"{DateTime.Now}");
+                    $"The service for listening for interesting Tweets has started.",
+                    $"");
 
-                TweetsService.DoSampleStreamAsync(twitterContext, chatHub).GetAwaiter().GetResult();
+                //var task = Task.Factory.StartNew(() =>
+                //{
+                //    for (int i = 0; i < int.MaxValue; i++)
+                //    {
+                //        //chatHub.Clients.All.SendAsync("broadcastMessage", "Start of GetDailyTicker", $"{DateTime.Now}");
+                //        try
+                //        {
+                //            var dailyTicker = binanceClient.GetDailyTicker("ETHBTC").GetAwaiter().GetResult();
+                //            SimpleCache.SymbolPriceChangeTickerResponseList.Insert(0, dailyTicker);
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            chatHub.Clients.All.SendAsync("broadcastMessage", "Exception", $"{ex.Message + ex.StackTrace + ex.InnerException?.Message + ex.InnerException?.StackTrace}");
+                //        }
+                //        //chatHub.Clients.All.SendAsync("broadcastMessage", "End of GetDailyTicker", $"{DateTime.Now}");
+                //        Thread.Sleep(10000);
+                //    }
+                //});
 
-
-                Task.Factory.StartNew(() =>
+                var _public_api = new CCXT.NET.Binance.Public.PublicApi();
+                var task = Task.Factory.StartNew(async () =>
                 {
                     for (int i = 0; i < int.MaxValue; i++)
                     {
-                        var dailyTicker = binanceClient.GetDailyTicker("BTCUSDT").GetAwaiter().GetResult();
+                        try
+                        {
+                            Ticker ticker = await _public_api.FetchTickerAsync("BTC", "USDT");
+
+                            SimpleCache.TickersList.Insert(0, ticker);
+                        }
+                        catch (Exception ex)
+                        {
+                            chatHub.Clients.All.SendAsync("broadcastMessage", "Exception", $"{ex.Message + ex.StackTrace + ex.InnerException?.Message + ex.InnerException?.StackTrace}");
+                        }
+
                         Thread.Sleep(1000);
-
-                        SimpleCache.SymbolPriceChangeTickerResponseList.Insert(0, dailyTicker);
                     }
-
                 });
+
+                TweetsService.DoSampleStreamAsync(twitterContext, chatHub).GetAwaiter().GetResult();
 
 
 
@@ -102,7 +129,7 @@ namespace QcpTask.Core.HostedServices
                 //var manualBinanceWebSocket = new InstanceBinanceWebSocketClient(binanceClient);
                 //manualBinanceWebSocket.ConnectToKlineWebSocket("BTCUSDT", BinanceExchange.API.Enums.KlineInterval.OneMinute, b =>
                 //{
-                //    SimpleCache.BinanceKlineDataList.Insert(0, b);
+                //    SimpleCache.BinanceKlineDatas.Insert(0, b);
 
                 //    chatHub.Clients.All.SendAsync("broadcastMessage",
                 //    $"{JsonConvert.SerializeObject(b, Formatting.Indented)}",

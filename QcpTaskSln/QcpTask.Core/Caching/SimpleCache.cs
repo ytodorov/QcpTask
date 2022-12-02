@@ -1,5 +1,6 @@
 ﻿using BinanceExchange.API.Models.Response;
 using BinanceExchange.API.Models.WebSocket;
+using CCXT.NET.Shared.Coin.Public;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,13 @@ namespace QcpTask.Core.Caching
     {
         static SimpleCache()
         {
-            SymbolPriceChangeTickerResponseList = new List<SymbolPriceChangeTickerResponse>();
+            TickersList = new List<Ticker>();
+            BinanceKlineDatas = new List<BinanceKlineData>();
+
         }
-        public static List<SymbolPriceChangeTickerResponse> SymbolPriceChangeTickerResponseList { get; set; }
+        public static List<Ticker> TickersList { get; set; }
+
+        public static List<BinanceKlineData> BinanceKlineDatas { get; set; }
+
     }
 }

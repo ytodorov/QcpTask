@@ -3,10 +3,10 @@
 @model QcpTask.Web.Pages.CacheModel
 
 
-Cache lenght @SimpleCache.SymbolPriceChangeTickerResponseList.Count
-@foreach (var cacheItem in SimpleCache.SymbolPriceChangeTickerResponseList)
+Cache lenght @SimpleCache.TickersList.Count
+@foreach (var cacheItem in SimpleCache.TickersList)
 {
     <p>
-        <span>HighPrice:</span> @cacheItem.HighPrice <span>LowPrice:</span> @cacheItem.LowPrice <span>CloseTime:</span> @cacheItem.CloseTime.ToString("o") <span>OpenTime:</span> @cacheItem.OpenTime.ToString("o")
+        <span>lastPrice:</span> @cacheItem.result.lastPrice
     </p>
 }
