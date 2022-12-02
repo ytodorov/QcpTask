@@ -44,15 +44,15 @@
         const generateRandomName = () =>
             Math.random().toString(36).substring(2, 10);
 
-        let username = generateRandomName();
+        let username = 'Person' + generateRandomName();
         const promptMessage = 'Enter your name:';
-        do {
-            username = prompt(promptMessage, username);
-            if (!username || username.startsWith('_') || username.indexOf('<') > -1 || username.indexOf('>') > -1) {
-                username = '';
-                promptMessage = 'Invalid input. Enter your name:';
-            }
-        } while (!username)
+        //do {
+        //    username = prompt(promptMessage, username);
+        //    if (!username || username.startsWith('_') || username.indexOf('<') > -1 || username.indexOf('>') > -1) {
+        //        username = '';
+        //        promptMessage = 'Invalid input. Enter your name:';
+        //    }
+        //} while (!username)
 
         const messageInput = document.getElementById('message');
         messageInput.focus();

@@ -17,6 +17,8 @@ namespace QcpTask.Core.Twitter
     {
         public static async Task DoSampleStreamAsync(TwitterContext twitterCtx, IHubContext<ChatHub> chathub)
         {
+            string stringToCheckInTweetText = "sellMyBitcoins";
+
             Console.WriteLine("\nStreamed Content: \n");
 
             int retries = 3;
@@ -39,7 +41,7 @@ namespace QcpTask.Core.Twitter
 
             var rules = new List<StreamingAddRule>
             {
-                new StreamingAddRule { Tag = "has BTCtoUSD string", Value = "QCP" },
+                new StreamingAddRule { Tag = "has BTCtoUSD string", Value = stringToCheckInTweetText },
             };
 
             Streaming? result = await twitterCtx.AddStreamingFilterRulesAsync(rules);
@@ -68,10 +70,10 @@ namespace QcpTask.Core.Twitter
                         {
                             if (strm.EntityType == StreamEntityType.Tweet)
                             {
-                                await HandleStreamResponse(strm, chathub);
-
-                                if (count++ >= 20000)
-                                    cancelTokenSrc.Cancel();
+                                if (strm?.Entity?.Tweet?.Text?.Contains(stringToCheckInTweetText, StringComparison.InvariantCultureIgnoreCase) == true)
+                                {
+                                    await HandleStreamResponse(strm, chathub);
+                                }
                             }
                         });
 

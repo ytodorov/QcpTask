@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QcpTask.Web", "QcpTask.Web\QcpTask.Web.csproj", "{4ECEAC66-1202-48FA-967F-17E91D2BF3A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QcpTask.Web", "QcpTask.Web\QcpTask.Web.csproj", "{4ECEAC66-1202-48FA-967F-17E91D2BF3A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QcpTask.Core", "QcpTask.Core\QcpTask.Core.csproj", "{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QcpTask.Core", "QcpTask.Core\QcpTask.Core.csproj", "{EFDEBB01-2873-4ED4-BF13-2CEE3FCBBED9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
