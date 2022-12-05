@@ -32,16 +32,19 @@ namespace QcpTask.Core.Twitter
                 (from strm in twitterCtx.Streaming
                  where strm.Type == StreamingType.Rules
                  select strm)
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
 
-            var existingRules = streaming.Rules;
-            var existingRulesIds = existingRules.Select(s => s.ID).ToList();
+            if (streaming != null && streaming.Rules != null)
+            {
+                var existingRules = streaming.Rules;
+                var existingRulesIds = existingRules.Select(s => s.ID).ToList();
 
-            Streaming? resultDelete = await twitterCtx.DeleteStreamingFilterRulesAsync(existingRulesIds);
+                Streaming? resultDelete = await twitterCtx.DeleteStreamingFilterRulesAsync(existingRulesIds);
 
+            }
             var rules = new List<StreamingAddRule>
             {
-                new StreamingAddRule { Tag = "has BTCtoUSD string", Value = stringToCheckInTweetText },
+                new StreamingAddRule { Tag = stringToCheckInTweetText, Value = stringToCheckInTweetText },
             };
 
             Streaming? result = await twitterCtx.AddStreamingFilterRulesAsync(rules);
@@ -54,6 +57,8 @@ namespace QcpTask.Core.Twitter
 
                 Console.WriteLine($"Created:  {summary.Created}");
                 Console.WriteLine($"!Created: {summary.NotCreated}");
+
+                await chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", $"Success AddStreamingFilterRulesAsync: {summary}");
             }
             do
             {
@@ -81,7 +86,7 @@ namespace QcpTask.Core.Twitter
                 }
                 catch (IOException ex)
                 {
-                    chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", ex.Message);
+                    await  chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", ex.Message);
                     // Twitter might have closed the stream,
                     // which they do sometimes. You should
                     // restart the stream, but be sure to
@@ -93,13 +98,13 @@ namespace QcpTask.Core.Twitter
                 }
                 catch (OperationCanceledException ex)
                 {
-                    chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", ex.Message);
+                    await  chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", ex.Message);
                     Console.WriteLine("Stream cancelled.");
                     retries = 0;
                 }
                 catch (TwitterQueryException tqe) when (tqe.StatusCode == HttpStatusCode.TooManyRequests)
                 {
-                    chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", tqe.Message);
+                    await  chathub.Clients.All.SendAsync("broadcastMessage", "twitterError", tqe.Message);
                 
                     int millisecondsToDelay = 1000 * (4 - retries);
                     retries--;
@@ -139,7 +144,7 @@ namespace QcpTask.Core.Twitter
 
                 Console.WriteLine(fullJson);
 
-                chatHub.Clients.All.SendAsync("broadcastMessage",
+                await  chatHub.Clients.All.SendAsync("broadcastMessage",
                 "twitterTweet",
                 $", Tweet Text: {tweet.Text} CreatedAt: {tweet.CreatedAt}, Tweet ID: {tweet.ID}");
             }

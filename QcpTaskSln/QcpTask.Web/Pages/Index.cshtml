@@ -1,16 +1,18 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "QCP Task for Yordan";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    testKey: @Model.TestKey @DateTime.Now
+
+<div class="panel panel-info">
+    <div class="panel-heading">Info:</div>
+    <div class="panel-body">
+        Tweet in Twitter publicly something that contains the string "sellMyBitcoins" and the text will appear here.
+       The idea is if an important person like Musk says something like "I'm thinking of sellMyBitcoins ..' the application will get Push notification for this event and appropriate steps can be taken.</div>
 </div>
 
- <h2 class="text-center" style="margin-top: 0; padding-top: 30px; padding-bottom: 30px;">Azure SignalR Group Chat</h2>
+ <h2 class="text-center" style="margin-top: 0; padding-top: 30px; padding-bottom: 30px;">Listening twitter for intertesing messages ..</h2>
     <div class="container" style="height: calc(100% - 110px);">
         <div id="messages" style="background-color: whitesmoke; "></div>
         <div style="width: 100%; border-left-style: ridge; border-right-style: ridge;">
@@ -44,7 +46,7 @@
         const generateRandomName = () =>
             Math.random().toString(36).substring(2, 10);
 
-        let username = 'Person' + generateRandomName();
+        let username = 'Person ' + generateRandomName() + ' from '+ '@this.Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString()';
         const promptMessage = 'Enter your name:';
         //do {
         //    username = prompt(promptMessage, username);

@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 
 namespace QcpTask.Core.Caching
 {
+    /// <summary>
+    /// Very simple caching mechanism. In real application Redis Cache or some other form of durrable service must be use.
+    /// Warning: This cache will be wiped out if the application restarts or the application pool restarts.
+    /// </summary>
     public static class SimpleCache
     {
         static SimpleCache()

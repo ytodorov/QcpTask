@@ -100,6 +100,8 @@ namespace QcpTask.Core.HostedServices
                 //    }
                 //});
 
+              
+
                 var _public_api = new CCXT.NET.Binance.Public.PublicApi();
                 var task = Task.Factory.StartNew(async () =>
                 {
@@ -109,11 +111,16 @@ namespace QcpTask.Core.HostedServices
                         {
                             Ticker ticker = await _public_api.FetchTickerAsync("BTC", "USDT");
 
-                            SimpleCache.TickersList.Insert(0, ticker);
+                            SimpleCache.TickersList.Insert(0, ticker); 
+
+                            if (ticker.statusCode != 0)
+                            {
+                                await chatHub.Clients.All.SendAsync("broadcastMessage", "Exception", $"{ticker.statusCode} {ticker.message}");
+                            }
                         }
                         catch (Exception ex)
                         {
-                            chatHub.Clients.All.SendAsync("broadcastMessage", "Exception", $"{ex.Message + ex.StackTrace + ex.InnerException?.Message + ex.InnerException?.StackTrace}");
+                            await chatHub.Clients.All.SendAsync("broadcastMessage", "Exception", $"{ex.Message + ex.StackTrace + ex.InnerException?.Message + ex.InnerException?.StackTrace}");
                         }
 
                         Thread.Sleep(1000);
@@ -121,6 +128,8 @@ namespace QcpTask.Core.HostedServices
                 });
 
                 TweetsService.DoSampleStreamAsync(twitterContext, chatHub).GetAwaiter().GetResult();
+
+
 
 
 
